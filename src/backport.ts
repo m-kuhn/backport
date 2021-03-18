@@ -184,6 +184,9 @@ const backport = async ({
       merge_commit_sha: mergeCommitSha,
       merged,
       number: pullRequestNumber,
+      user: {
+        login: pullRequestUserLogin
+      },
       title: originalTitle,
     },
     repository: {
@@ -221,7 +224,7 @@ const backport = async ({
 
   // The merge commit SHA is actually not null.
   const commitToBackport = String(mergeCommitSha);
-  info(`Backporting ${commitToBackport} from #${pullRequestNumber}`);
+  info(`Backporting ${commitToBackport} from #${pullRequestNumber} by @${pullRequestUserLogin}`);
 
   await exec("git", [
     "clone",
@@ -236,7 +239,7 @@ const backport = async ({
   await exec("git", ["config", "--global", "user.name", "github-actions[bot]"]);
 
   for (const [base, head] of Object.entries(backportBaseToHead)) {
-    const body = `Backport ${commitToBackport} from #${pullRequestNumber}`;
+    const body = `Backport ${commitToBackport} from #${pullRequestNumber} by @${pullRequestUserLogin}`;
 
     let title = titleTemplate;
     Object.entries({
