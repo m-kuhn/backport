@@ -104,12 +104,12 @@ const backportOnce = async ({
     await exec("git", args, { cwd: repo });
   };
 
-  await git("switch", base);
+  await git("checkout", commitToBackport);
   await git("switch", "--create", head);
   try {
-    await git("cherry-pick", "--mainline", "1", commitToBackport);
+    await git("rebase", base);
   } catch (error: unknown) {
-    await git("cherry-pick", "--abort");
+    await git("rebase", "--abort");
     throw error;
   }
 
