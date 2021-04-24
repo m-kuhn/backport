@@ -104,6 +104,13 @@ const backportOnce = async ({
     await exec("git", args, { cwd: repo });
   };
 
+  try {
+    await git("show", commitToBackport + "^2")
+    // It's a merge commit
+  } catch (error: unknown) {
+    // It's not a merge commit
+
+  }
   await git("checkout", commitToBackport);
   await git("switch", "--create", head);
   try {
